@@ -45,7 +45,17 @@ namespace BuscaCnpj.Controllers
             }
         }
 
-       
+        public async Task<ActionResult> GeraExcel(string cnpj){
+            
+            if (cnpj == null) return View();
+            cnpj = Utilidades.FormataCnpj(cnpj);
+
+            _contaServices.CriaExcelPorObj(cnpj);
+
+
+            return NoContent();
+        }
+
 
         public IActionResult Privacy()
         {
