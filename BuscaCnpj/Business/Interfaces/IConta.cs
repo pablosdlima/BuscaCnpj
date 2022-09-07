@@ -7,7 +7,7 @@ namespace BuscaCnpj.Business.Interfaces
     public interface IConta
     {
         Task<Root> BuscaContaPorCnpj(string cnpj);
-        void CriaExcelPorObj(string conta);
+        //void CriaExcelPorObj(string conta);
         Root PopulaInfoRootPorObj(dynamic obj);
     }
 }

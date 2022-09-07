@@ -15,19 +15,24 @@ namespace BuscaCnpj.Business.Services
 {
     public class ContaServices : IConta
     {
+        public static async Task<dynamic> ConsomeEndPointCnpj(string cnpj)
+        {
+            HttpClient http = new();
+            http.BaseAddress = new Uri($"https://receitaws.com.br/v1/cnpj/");
+            HttpResponseMessage resposta = await http.GetAsync(cnpj);
+            resposta.EnsureSuccessStatusCode();
+
+            string conteudo = resposta.Content.ReadAsStringAsync().Result;
+            dynamic resultado = JsonConvert.DeserializeObject(conteudo);
+            return resultado;
+        }
+
         public async Task<Root> BuscaContaPorCnpj(string cnpj)
         {
             try
             {
-                //Root model = new();
-                HttpClient http = new();
-                http.BaseAddress = new Uri($"https://receitaws.com.br/v1/cnpj/");
-                HttpResponseMessage resposta = await http.GetAsync(cnpj);
-                resposta.EnsureSuccessStatusCode();
 
-                string conteudo = resposta.Content.ReadAsStringAsync().Result;
-                dynamic resultado = JsonConvert.DeserializeObject(conteudo);
-
+                dynamic resultado = await ConsomeEndPointCnpj(cnpj);
                 Root root = PopulaInfoRootPorObj(resultado);
                 return root;
             }
@@ -38,53 +43,25 @@ namespace BuscaCnpj.Business.Services
             return null;
         }
 
-        public async void CriaExcelPorObj(string cnpj)
-        {
-            try
-            {
-                HttpClient http = new();
-                http.BaseAddress = new Uri($"https://receitaws.com.br/v1/cnpj/");
-                HttpResponseMessage resposta = await http.GetAsync(cnpj);
-                resposta.EnsureSuccessStatusCode();
-                string conteudo = resposta.Content.ReadAsStringAsync().Result;
-                dynamic resultado = JsonConvert.DeserializeObject(conteudo);
+        //public async FileResult CriaExcelPorObj(string cnpj)
+        //{
+        //    try
+        //    {
+        //        dynamic resultado = await ConsomeEndPointCnpj(cnpj);
+
+        //        var builder = new StringBuilder();
+        //        builder.AppendLine("Cnpj, Cep");
+        //        builder.AppendLine($"{resultado.cnpj}, {resultado.cep}");
+
+        //        return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "users.csv");
 
 
-                //DataTable dt = new DataTable();
-                //dt.Columns.Add("Nome");
-                //dt.Columns.Add("Telefone");
-                //dt.Rows.Add("eduardo", "11111");
-                //dt.Rows.Add("coutinho", "22222");
-
-                //FileInfo fileInfoTemplate = new FileInfo(System.Web.HttpContext.Current.Server.MapPath("~/Template/Template.xlsx"));
-
-                //OfficeOpenXml.ExcelPackage excel = new ExcelPackage(fileInfoTemplate);
-
-                //ExcelWorksheet worksheet = excel.Workbook.Worksheets.Add("teste");
-                //worksheet.Cells["A1"].LoadFromDataTable(dt, true);
-
-                //System.IO.MemoryStream stream = new System.IO.MemoryStream();
-                //excel.SaveAs(stream);
-
-
-                //HttpContext.Response.Clear();
-                //HttpContext.Response.AddHeader("content-disposition", string.Format("attachment;filename=Teste_{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")));
-
-                //HttpContext.Response.ContentType = "application/vnd.ms-excel";
-                //HttpContext.Response.ContentEncoding = System.Text.Encoding.Default;
-
-                //HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-
-                //stream.WriteTo(Response.OutputStream);
-
-                //Response.End();
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
 
         public Root PopulaInfoRootPorObj(dynamic obj)
         {
