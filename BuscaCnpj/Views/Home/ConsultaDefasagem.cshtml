@@ -1,11 +1,16 @@
-﻿<form asp-action="Consultas" class="w-100 shadow-lg p-2 rounded">
+﻿<form asp-action="ConsultaDefasagem" class="w-100 shadow-lg p-2 rounded">
     <div class="input-group w-100">
-        <label class="label-control w-100 p-2">CNPJ: </label>
+
         <div class="d-flex justify-content-around w-100">
-            <input type="search" id="idcnpj" name="cnpj" class="form-control rounded w-75 p-2" placeholder="00.000.000/0000-00" aria-label="Search" aria-describedby="search-addon" onchange="mask(this)" required />
+            <label class="label-control w-50 p-2">CNPJ: </label>
+            <label class="label-control w-50 p-2">Dias: </label>
+        </div>
+        <div class="d-flex justify-content-around w-100">
+            <input type="search" id="idcnpj" name="cnpj" class="form-control rounded w-50 p-2" placeholder="00.000.000/0000-00" aria-label="Search" aria-describedby="search-addon" onchange="mask(this)" required />
+            <input type="number" value="1" id="idDias" name="dias" class="form-control rounded w-25 p-2" placeholder="1" aria-label="Search" aria-describedby="search-addon" required />
             <input type="submit" class="btn btn-success p-2" value="Buscar Cnpj" />
         </div>
-        <span class="text-danger w-100 p-1">*informe o CNPJ</span>
+        <span class="text-danger w-100 p-1">*informe o CNPJ com defasagem máxima</span>
     </div>
 </form>
 <br />
