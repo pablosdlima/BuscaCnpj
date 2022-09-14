@@ -103,7 +103,6 @@ C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\BuscaCnpj.TagHelper
 C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\BuscaCnpj.TagHelpers.output.cache
 C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\BuscaCnpj.RazorCoreGenerate.cache
 C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\Razor\Views\Home\Consultas.cshtml.g.cs
-C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\Razor\Views\Home\Privacy.cshtml.g.cs
 C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\Razor\Views\Shared\Error.cshtml.g.cs
 C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\Razor\Views\Shared\_Layout.cshtml.g.cs
 C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
@@ -239,3 +238,6 @@ D:\Aplicações\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\BuscaCnpj.genruntimeconfig.
 D:\Aplicações\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\ref\BuscaCnpj.dll
 D:\Aplicações\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\Razor\Views\Home\ConsultaDefasagem.cshtml.g.cs
 D:\Aplicações\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\Razor\Views\Home\RelatorioConsultas.cshtml.g.cs
+C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\Razor\Views\Home\ConsultaDefasagem.cshtml.g.cs
+C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\Razor\Views\Home\RelatorioConsultas.cshtml.g.cs
+C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\Razor\Views\Home\ConsultaLote.cshtml.g.cs

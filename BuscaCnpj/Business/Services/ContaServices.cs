@@ -93,20 +93,20 @@ namespace BuscaCnpj.Business.Services
         }
 
 
-        public async Task<dynamic> BuscaRelatorioCnpj()
-        {
-            try
-            {
-                dynamic resultado = await EndPointRelatorioCnpj();
-                resultado = resultado.calls;
-                return resultado;
-            }
-            catch (Exception err)
-            {
-                Console.Write($"{err}");
-            }
-            return null;
-        }
+        //public async Task<dynamic> BuscaRelatorioCnpj()
+        //{
+        //    try
+        //    {
+        //        dynamic resultado = await EndPointRelatorioCnpj();
+        //        resultado = resultado.calls;
+        //        return resultado;
+        //    }
+        //    catch (Exception err)
+        //    {
+        //        Console.Write($"{err}");
+        //    }
+        //    return null;
+        //}
 
 
         public StringBuilder ConstroiCSV(dynamic resultado)

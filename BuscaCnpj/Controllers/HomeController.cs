@@ -17,6 +17,7 @@ namespace BuscaCnpj.Controllers
     public class HomeController : Controller
     {
         private readonly IConta _contaServices;
+        private static readonly List<string> _listaLotes = new();
 
         public HomeController(IConta contaServices)
         {
@@ -52,6 +53,37 @@ namespace BuscaCnpj.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ConsultaLote(bool lote)
+        {
+            if (lote is true)
+            {
+                List<Root> list = new();
+                foreach (var item in _listaLotes)
+                {
+                    list.Add(await _contaServices.BuscaContaPorCnpj(item));
+                }
+                ViewBag.ListaApi = list;
+            }
+            _listaLotes.Clear();
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ConsultaLote(string cnpj)
+        {
+            _listaLotes.Add(Utilidades.FormataCnpj(cnpj));
+            ViewBag.Lista = _listaLotes;
+            return View();
+        }
+        
+        [HttpGet]
+        public IActionResult PopulaLote(int? id)
+        {
+            if (id != null) return RedirectToAction("ConsultaLote", new { lote = true });
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> ConsultaDefasagem(string cnpj, int dias)
         {
@@ -77,21 +109,21 @@ namespace BuscaCnpj.Controllers
         //}
 
         //[HttpPost]
-        public async Task<IActionResult> RelatorioConsultas()
-        {
-            try
-            {
+        //public async Task<IActionResult> RelatorioConsultas()
+        //{
+        //    try
+        //    {
               
-                ViewBag.Lista = await _contaServices.BuscaRelatorioCnpj();
+        //        ViewBag.Lista = await _contaServices.BuscaRelatorioCnpj();
 
-                Console.WriteLine("Teste");
-                return View();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //        Console.WriteLine("Teste");
+        //        return View();
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
 
         public async Task<ActionResult> GeraExcel(string cnpj)
         {

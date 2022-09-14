@@ -9,7 +9,7 @@ namespace BuscaCnpj.Business.Interfaces
     {
         Task<Root> BuscaContaPorCnpj(string cnpj);
         Task<Root> BuscaContaPorCnpjDefasado(string cnpj, int dias);
-        Task<dynamic> BuscaRelatorioCnpj();
+        //Task<dynamic> BuscaRelatorioCnpj();
         StringBuilder ConstroiCSV(dynamic resultado);
         Root PopulaInfoRootPorObj(dynamic obj);
     }
