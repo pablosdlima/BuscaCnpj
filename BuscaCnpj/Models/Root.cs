@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace BuscaCnpj.Models
@@ -8,6 +9,9 @@ namespace BuscaCnpj.Models
     {
         public string status { get; set; }
         public DateTime? ultima_atualizacao { get; set; }
+
+        [Required(ErrorMessage = "CNPJ é obrigatório")]
+        [RegularExpression(@"(^(\d{2}.\d{3}.\d{3}/\d{4}-\d{2})|(\d{14})$)", ErrorMessage = "Informe um CNPJ válido")] //cnpj
         public string cnpj { get; set; }
         public string tipo { get; set; }
         public string porte { get; set; }

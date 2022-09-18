@@ -1,11 +1,12 @@
-﻿<form asp-action="Consultas" class="w-100 shadow-lg p-2 rounded">
+﻿@model BuscaCnpj.Models.Root
+<form asp-action="Consultas" class="w-100 shadow-lg p-2 rounded">
     <div class="input-group w-100">
         <label class="label-control w-100 p-2">CNPJ: </label>
         <div class="d-flex justify-content-around w-100">
-            <input type="search" id="idcnpj" name="cnpj" class="form-control rounded w-75 p-2" placeholder="00.000.000/0000-00" aria-label="Search" aria-describedby="search-addon" onchange="mask(this)" required />
+            <input asp-for="cnpj" type="search" id="idcnpj" name="cnpj" class="form-control rounded w-75 p-2" placeholder="EX 00.000.000/0000-00" aria-label="Search" aria-describedby="search-addon" onchange="mask(this)" />
             <input type="submit" class="btn btn-success p-2" value="Buscar Cnpj" />
         </div>
-        <span class="text-danger w-100 p-1">*informe o CNPJ</span>
+        <span asp-validation-for="cnpj" class="text-danger w-100 p-2"></span>
     </div>
 </form>
 <br />

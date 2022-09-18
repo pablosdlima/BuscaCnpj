@@ -18,19 +18,14 @@ namespace BuscaCnpj.Business.Services
 {
     public class ContaServices : IConta
     {
-        private static HttpClient HttpAuthAPI(bool apiKey)
+        private static HttpClient HttpAuthAPI()
         {
 
             HttpClient http = new(); //API
             http.BaseAddress = new Uri($"https://receitaws.com.br/v1/");
-
-            if (apiKey == true)
-            {
-                http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                    "Bearer", $"{Secret.Key}"
-                );
-                return http;
-            }
+            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer", $"{Secret.Key}"
+            );
             return http;
         }
         private static dynamic ResponseStatusCode(HttpResponseMessage resposta)
@@ -43,21 +38,21 @@ namespace BuscaCnpj.Business.Services
 
         public static async Task<dynamic> EndPointCnpj(string cnpj)
         {
-            HttpClient http = HttpAuthAPI(false);
+            HttpClient http = HttpAuthAPI();
             HttpResponseMessage resposta = await http.GetAsync($"cnpj/{cnpj}");
             return ResponseStatusCode(resposta);
         }
 
         public static async Task<dynamic> EndPointCnpjDefasado(string cnpj, int days)
         {
-            HttpClient http = HttpAuthAPI(true);
+            HttpClient http = HttpAuthAPI();
             HttpResponseMessage resposta = await http.GetAsync($"cnpj/{cnpj}/days/{days}");
             return ResponseStatusCode(resposta);
         }
 
         public static async Task<dynamic> EndPointRelatorioCnpj()
         {
-            HttpClient http = HttpAuthAPI(true);
+            HttpClient http = HttpAuthAPI();
             HttpResponseMessage resposta = await http.GetAsync($"/account/calls/report");
             return ResponseStatusCode(resposta);
         }
@@ -91,23 +86,6 @@ namespace BuscaCnpj.Business.Services
             }
             return null;
         }
-
-
-        //public async Task<dynamic> BuscaRelatorioCnpj()
-        //{
-        //    try
-        //    {
-        //        dynamic resultado = await EndPointRelatorioCnpj();
-        //        resultado = resultado.calls;
-        //        return resultado;
-        //    }
-        //    catch (Exception err)
-        //    {
-        //        Console.Write($"{err}");
-        //    }
-        //    return null;
-        //}
-
 
         public StringBuilder ConstroiCSV(dynamic resultado)
         {
