@@ -16,6 +16,7 @@ namespace BuscaCnpj.Controllers
     {
         private readonly IConta _contaServices;
         private static readonly List<dynamic> _listaLotes = new();
+        //private static readonly List<string> _listaLotes = new();
         public Boolean IsLoading { get; set; } = true;
 
         public HomeController(IConta contaServices)
@@ -57,13 +58,13 @@ namespace BuscaCnpj.Controllers
         }
 
         [HttpGet]
-        public IActionResult ConsultaLote(bool lote)
+        public async Task<IActionResult> ConsultaLote(bool lote)
         {
             try
             {
                 if (lote is true)
                 {
-                    List<dynamic> list = new();
+                    //List<dynamic> list = new();
                     var listaLotes = _listaLotes.Distinct();
 
                     var builder = new StringBuilder();
@@ -74,16 +75,20 @@ namespace BuscaCnpj.Controllers
                         " Telefone;  EFR;  data_situacao;  motivo_situacao; situacao_especial;" +
                         " data_situacao_especial;  capital_social;");
 
+
                     foreach (var item in listaLotes)
                     {
-
-                        builder.AppendLine($"{item.cnpj} ; {item.status} ; {item.ultima_atualizacao}; {item.tipo} ; {item.porte} ;" +
-                            $"{item.nome}; {item.fantasia} ; {item.abertura} ; {item.atividade_principal[0].code};" +
-                            $"{item.atividade_principal[0].text}; {item.atividades_secundarias[0].code}; {item.atividades_secundarias[0].text};" +
-                            $"{item.natureza_juridica}; {item.logradouro}; {item.numero}; {item.complemento}; {item.cep};" +
-                            $"{item.bairro}; {item.municipio}; {item.uf}; {item.email}; {item.telefone}; {item.efr};" +
-                            $"{item.data_situacao}; {item.motivo_situacao}; {item.situacao_especial}; {item.data_situacao_especial}; {item.capital_social};");
-
+                        Thread.Sleep(1000);
+                        var conta = await ContaServices.EndPointCnpjDefasado(Utilidades.FormataCnpj(item), 1);
+                        if (conta != null)
+                        {
+                            builder.AppendLine($"{conta.cnpj} ; {conta.status} ; {conta.ultima_atualizacao}; {conta.tipo} ; {conta.porte} ;" +
+                                $"{conta.nome}; {conta.fantasia} ; {conta.abertura} ; {conta.atividade_principal[0].code};" +
+                                $"{conta.atividade_principal[0].text}; {conta.atividades_secundarias[0].code}; {conta.atividades_secundarias[0].text};" +
+                                $"{conta.natureza_juridica}; {conta.logradouro}; {conta.numero}; {conta.complemento}; {conta.cep};" +
+                                $"{conta.bairro}; {conta.municipio}; {conta.uf}; {conta.email}; {conta.telefone}; {conta.efr};" +
+                                $"{conta.data_situacao}; {conta.motivo_situacao}; {conta.situacao_especial}; {conta.data_situacao_especial}; {conta.capital_social};");
+                        }
                     }
                     ViewBag.Lista = null;
                     return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", $"loteCNPJ.csv");
@@ -102,18 +107,24 @@ namespace BuscaCnpj.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ConsultaLote(Root model, string cnpj)
+        public IActionResult ConsultaLote(Root model, string cnpj)
         {
-            if (!ModelState.IsValid) return View();
-            if (_listaLotes.Count >= 3) Thread.Sleep(8000);
-            
-            var conta = await ContaServices.EndPointCnpj(Utilidades.FormataCnpj(cnpj));
-            if (conta != null)
-            {
-                _listaLotes.Add(conta);
-            }
-            return RedirectToAction("ConsultaLote");
+            _listaLotes.Add(Utilidades.FormataCnpj(cnpj));
+            ViewBag.Lista = _listaLotes;
+            return View();
         }
+
+        // [HttpPost]
+        //public async Task<IActionResult> ConsultaLote(Root model, string cnpj)
+        //{
+        //    if (!ModelState.IsValid) return View();
+        //    var conta = await ContaServices.EndPointCnpjDefasado(Utilidades.FormataCnpj(cnpj), 1);
+        //    if (conta != null)
+        //    {
+        //        _listaLotes.Add(conta);
+        //    }
+        //    return RedirectToAction("ConsultaLote");
+        //}
 
         [HttpGet]
         public IActionResult DeletaLote()

@@ -43,19 +43,19 @@ else
                 <thead>
                     <tr class="text-white">
                         <th class="bg-primary" scope="col">CNPJ</th>
-                        <th class="bg-primary" scope="col">Nome</th>
+                       @* <th class="bg-primary" scope="col">Nome</th>
                         <th class="bg-primary" scope="col">Fantasia</th>
-                        <th class="bg-primary" scope="col">CEP</th>
+                        <th class="bg-primary" scope="col">CEP</th>*@
                     </tr>
                 </thead>
                 @foreach (var item in ViewBag.Lista)
                 {
                     <tbody>
                         <tr class="">
-                            <td class="" scope="col">@item.cnpj</td>
-                            <td class="" scope="col">@item.nome</td>
+                            <td class="" scope="col">@item</td>
+                          @*  <td class="" scope="col">@item.nome</td>
                             <td class="" scope="col">@item.fantasia</td>
-                            <td class="" scope="col">@item.cep</td>
+                            <td class="" scope="col">@item.cep</td>*@
                         </tr>
                     </tbody>
                 }
