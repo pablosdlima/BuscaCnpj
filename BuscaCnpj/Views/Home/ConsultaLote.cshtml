@@ -1,6 +1,9 @@
 ﻿@model BuscaCnpj.Models.Root
 
-@if (ViewBag.Lista != null)
+<h1 class="display-3 text-center text-secondary">Consulta por Lote</h1>
+<p class="lead text-center p-2">Insira até 15 registros de CNPJ e os converta em CSV</p>
+<hr/>
+@* @if (ViewBag.Lista != null)
 {
     <div id="idcarregando" class="spinner-border text-success" role="status" style="width:350px; height:350px;">
         <span class="sr-only">Carregando...</span>
@@ -15,28 +18,25 @@
             <span asp-validation-for="cnpj" class="text-danger w-100 p-2"></span>
         </div>
     </form>
-}
-else
-{
+} *@
     <form asp-action="ConsultaLote" class="w-100 shadow-lg p-2 rounded">
         <div class="input-group w-100">
             <label class="label-control w-100 p-2">CNPJ: </label>
             <div class="d-flex justify-content-around w-100">
-                <input asp-for="cnpj" name="cnpj" class="form-control rounded w-75 p-2" placeholder="EX 00.000.000/0000-00" aria-label="Search" aria-describedby="search-addon" onchange="mask(this)" />
-                <input type="submit" class="btn btn-success p-2" value="Buscar Cnpj" />
+                <input asp-for="cnpj" name="cnpj" type="search" id="idCnpj" class="form-control rounded w-75 p-2" placeholder="EX 00.000.000/0000-00" aria-label="Search" aria-describedby="search-addon" onchange="mask(this)" />
+                <input type="submit" class="btn btn-success p-2" value="Buscar Cnpj"  />
             </div>
             <span asp-validation-for="cnpj" class="text-danger w-100 p-2"></span>
         </div>
     </form>
-}
-
     <br />
     @if (ViewBag.Lista != null)
     {
         <div class="d-flex w-25 justify-content-between">
-            <a asp-action="ConsultaLote" asp-controller="Home" asp-route-lote="true" class="btn btn-outline-success text-center ">Gerar Excel</a>
             <a asp-action="DeletaLote" asp-controller="Home" class="btn btn-danger text-center ">Limpar Cnpjs</a>
+            <a asp-action="ConsultaLote" asp-controller="Home" asp-route-lote="true" class="btn btn-outline-success text-center ">Gerar Excel</a>
         </div>
+        <p class="text-right"><strong>Quantidade de Registros: @ViewBag.Quantidade</strong></p>
         <h4 class="text-center">Cnpjs a serem convertidos em Excel</h4>
         <div class="w-100 shadow-lg p-2 rounded" style="overflow: auto; height:50vh;">
             <table class="table table-striped text-center">

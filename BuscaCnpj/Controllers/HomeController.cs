@@ -36,7 +36,6 @@ namespace BuscaCnpj.Controllers
         {
             try
             {
-
                 if (!ModelState.IsValid) return View();
                 if (cnpj == null) return View();
                 cnpj = Utilidades.FormataCnpj(cnpj);
@@ -57,16 +56,13 @@ namespace BuscaCnpj.Controllers
             return View();
         }
 
-        [HttpGet]
         public async Task<IActionResult> ConsultaLote(bool lote)
         {
             try
             {
                 if (lote is true)
                 {
-                    //List<dynamic> list = new();
                     var listaLotes = _listaLotes.Distinct();
-
                     var builder = new StringBuilder();
                     builder.AppendLine($"CNPJ ; STATUS ; ultima_atualizacao; Tipo;  Porte ;" +
                         " Nome ; Fantasia ; Abertura ;  Codigo atividade_principal ;  Texto atividade_principal;" +
@@ -78,7 +74,7 @@ namespace BuscaCnpj.Controllers
 
                     foreach (var item in listaLotes)
                     {
-                        Thread.Sleep(1000);
+                        Thread.Sleep(800);
                         var conta = await ContaServices.EndPointCnpjDefasado(Utilidades.FormataCnpj(item), 1);
                         if (conta != null)
                         {
@@ -91,7 +87,7 @@ namespace BuscaCnpj.Controllers
                         }
                     }
                     ViewBag.Lista = null;
-                    return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", $"loteCNPJ.csv");
+                    return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", $"loteCNPJ{DateTime.Now}.csv");
                 }
                 else
                 {
@@ -110,21 +106,10 @@ namespace BuscaCnpj.Controllers
         public IActionResult ConsultaLote(Root model, string cnpj)
         {
             _listaLotes.Add(Utilidades.FormataCnpj(cnpj));
-            ViewBag.Lista = _listaLotes;
+            ViewBag.Lista = _listaLotes.Distinct();
+            ViewBag.Quantidade = _listaLotes.Distinct().Count();
             return View();
         }
-
-        // [HttpPost]
-        //public async Task<IActionResult> ConsultaLote(Root model, string cnpj)
-        //{
-        //    if (!ModelState.IsValid) return View();
-        //    var conta = await ContaServices.EndPointCnpjDefasado(Utilidades.FormataCnpj(cnpj), 1);
-        //    if (conta != null)
-        //    {
-        //        _listaLotes.Add(conta);
-        //    }
-        //    return RedirectToAction("ConsultaLote");
-        //}
 
         [HttpGet]
         public IActionResult DeletaLote()
