@@ -1,64 +1,49 @@
-﻿@model BuscaCnpj.Models.Root
+﻿@model BuscaCnpj.Models.CnpjDiasVw
 
 <h1 class="display-3 text-center text-secondary">Consulta por Lote</h1>
 <p class="lead text-center p-2">Insira até 15 registros de CNPJ e os converta em CSV</p>
-<hr/>
-@* @if (ViewBag.Lista != null)
-{
-    <div id="idcarregando" class="spinner-border text-success" role="status" style="width:350px; height:350px;">
-        <span class="sr-only">Carregando...</span>
+<hr />
+<form asp-action="ConsultaLote" class="w-100 shadow-lg p-2 rounded">
+    <div class="input-group w-100">
+        <div class="d-flex justify-content-around w-100">
+            <label class="label-control w-50 p-2">Dias: </label>
+            <label class="label-control w-50 p-2">CNPJ: </label>
+        </div>
+        <div class="d-flex justify-content-around w-100">
+            <input asp-for="Dias" type="number" min="1" value="1" id="idDias" name="dias" class="form-control rounded w-25 p-2" placeholder="1" aria-label="Search" aria-describedby="search-addon" required />
+            <input asp-for="Cnpj" type="search" id="idcnpj" class="form-control rounded w-50 p-2" placeholder="EX 00.000.000/0000-00" aria-label="Search" aria-describedby="search-addon" onchange="mask(this)" />
+            <input type="submit" class="btn btn-success p-2" value="Buscar Cnpj" />
+        </div>
+        <span asp-validation-for="Cnpj" class="text-danger w-100 p-2"></span>
+        <span asp-validation-for="Dias" class="text-danger w-100 p-2"></span>
     </div>
-    <form asp-action="ConsultaLote" class="w-100 shadow-lg p-2 rounded" id="idForm" style="display:none;">
-        <div class="input-group w-100">
-            <label class="label-control w-100 p-2">CNPJ: </label>
-            <div class="d-flex justify-content-around w-100">
-                <input asp-for="cnpj" name="cnpj" class="form-control rounded w-75 p-2" placeholder="EX 00.000.000/0000-00" aria-label="Search" aria-describedby="search-addon" onchange="mask(this)" />
-                <input type="submit" class="btn btn-success p-2" value="Buscar Cnpj" />
-            </div>
-            <span asp-validation-for="cnpj" class="text-danger w-100 p-2"></span>
-        </div>
-    </form>
-} *@
-    <form asp-action="ConsultaLote" class="w-100 shadow-lg p-2 rounded">
-        <div class="input-group w-100">
-            <label class="label-control w-100 p-2">CNPJ: </label>
-            <div class="d-flex justify-content-around w-100">
-                <input asp-for="cnpj" name="cnpj" type="search" id="idCnpj" class="form-control rounded w-75 p-2" placeholder="EX 00.000.000/0000-00" aria-label="Search" aria-describedby="search-addon" onchange="mask(this)" />
-                <input type="submit" class="btn btn-success p-2" value="Buscar Cnpj"  />
-            </div>
-            <span asp-validation-for="cnpj" class="text-danger w-100 p-2"></span>
-        </div>
-    </form>
-    <br />
-    @if (ViewBag.Lista != null)
-    {
-        <div class="d-flex w-25 justify-content-between">
-            <a asp-action="DeletaLote" asp-controller="Home" class="btn btn-danger text-center ">Limpar Cnpjs</a>
-            <a asp-action="ConsultaLote" asp-controller="Home" asp-route-lote="true" class="btn btn-outline-success text-center ">Gerar Excel</a>
-        </div>
-        <p class="text-right"><strong>Quantidade de Registros: @ViewBag.Quantidade</strong></p>
-        <h4 class="text-center">Cnpjs a serem convertidos em Excel</h4>
-        <div class="w-100 shadow-lg p-2 rounded" style="overflow: auto; height:50vh;">
-            <table class="table table-striped text-center">
-                <thead>
-                    <tr class="text-white">
-                        <th class="bg-primary" scope="col">CNPJ</th>
-                       @* <th class="bg-primary" scope="col">Nome</th>
-                        <th class="bg-primary" scope="col">Fantasia</th>
-                        <th class="bg-primary" scope="col">CEP</th>*@
+</form>
+<br />
+@if (ViewBag.Lista != null)
+{
+    <div class="d-flex w-25 justify-content-between">
+        <a asp-action="DeletaLote" asp-controller="Home" class="btn btn-danger text-center ">Limpar Cnpjs</a>
+        <a asp-action="GeraLoteExcel" asp-controller="Home" class="btn btn-outline-success text-center ">Gerar Excel</a>
+    </div>
+    <p class="text-right"><strong>Quantidade de Registros: @ViewBag.Quantidade</strong></p>
+    <h4 class="text-center">Cnpjs a serem convertidos em Excel</h4>
+    <div class="w-100 shadow-lg p-2 rounded" style="overflow: auto; height:50vh;">
+        <table class="table table-striped text-center">
+            <thead>
+                <tr class="text-white">
+                    <th class="bg-primary" scope="col">Dias</th>
+                    <th class="bg-primary" scope="col">CNPJ</th>
+                </tr>
+            </thead>
+            @foreach (var item in ViewBag.Lista)
+            {
+                <tbody>
+                    <tr class="">
+                        <td class="" scope="col">@item.Dias</td>
+                        <td class="" scope="col">@item.Cnpj</td>
                     </tr>
-                </thead>
-                @foreach (var item in ViewBag.Lista)
-                {
-                    <tbody>
-                        <tr class="">
-                            <td class="" scope="col">@item</td>
-                          @*  <td class="" scope="col">@item.nome</td>
-                            <td class="" scope="col">@item.fantasia</td>
-                            <td class="" scope="col">@item.cep</td>*@
-                        </tr>
-                    </tbody>
-                }
-            </table>
-        </div>
-    }
+                </tbody>
+            }
+        </table>
+    </div>
+}

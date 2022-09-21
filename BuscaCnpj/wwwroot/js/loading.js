@@ -1,5 +1,5 @@
 ﻿addEventListener('load', function (e) {
-    document.getElementById('idCnpj').value = '';
+    document.getElementById('idcnpj').value = '';
 });
 
 // window.setTimeout(function () {

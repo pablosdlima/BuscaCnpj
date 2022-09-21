@@ -11,7 +11,7 @@ namespace BuscaCnpj.Models
         public DateTime? ultima_atualizacao { get; set; }
 
         [Required(ErrorMessage = "CNPJ é obrigatório")]
-        [RegularExpression(@"(^(\d{2}.\d{3}.\d{3}/\d{4}-\d{2})|(\d{14})$)", ErrorMessage = "Informe um CNPJ válido")] //cnpj
+        [RegularExpression(@"(^(\d{2}.\d{3}.\d{3}/\d{4}-\d{2})|(\d{14})$)", ErrorMessage = "Informe um CNPJ válido")]
         public string cnpj { get; set; }
         public string tipo { get; set; }
         public string porte { get; set; }

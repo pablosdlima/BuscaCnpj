@@ -4,6 +4,7 @@ using BuscaCnpj.Business.Utils;
 using BuscaCnpj.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,9 +16,7 @@ namespace BuscaCnpj.Controllers
     public class HomeController : Controller
     {
         private readonly IConta _contaServices;
-        private static readonly List<dynamic> _listaLotes = new();
-        //private static readonly List<string> _listaLotes = new();
-        public Boolean IsLoading { get; set; } = true;
+        private static readonly List<CnpjDiasVw> _listaLotes = new();
 
         public HomeController(IConta contaServices)
         {
@@ -56,58 +55,30 @@ namespace BuscaCnpj.Controllers
             return View();
         }
 
-        public async Task<IActionResult> ConsultaLote(bool lote)
+        [HttpGet]
+        public IActionResult ConsultaLote()
         {
             try
             {
-                if (lote is true)
-                {
-                    var listaLotes = _listaLotes.Distinct();
-                    var builder = new StringBuilder();
-                    builder.AppendLine($"CNPJ ; STATUS ; ultima_atualizacao; Tipo;  Porte ;" +
-                        " Nome ; Fantasia ; Abertura ;  Codigo atividade_principal ;  Texto atividade_principal;" +
-                        " Codigo atividades_secundarias;  Texto atividades_secundarias;  natureza_juridica;" +
-                        " logradouro; Numero;  Complemento;  Cep; Bairro;  Municipio;  UF; Email;" +
-                        " Telefone;  EFR;  data_situacao;  motivo_situacao; situacao_especial;" +
-                        " data_situacao_especial;  capital_social;");
-
-
-                    foreach (var item in listaLotes)
-                    {
-                        Thread.Sleep(800);
-                        var conta = await ContaServices.EndPointCnpjDefasado(Utilidades.FormataCnpj(item), 1);
-                        if (conta != null)
-                        {
-                            builder.AppendLine($"{conta.cnpj} ; {conta.status} ; {conta.ultima_atualizacao}; {conta.tipo} ; {conta.porte} ;" +
-                                $"{conta.nome}; {conta.fantasia} ; {conta.abertura} ; {conta.atividade_principal[0].code};" +
-                                $"{conta.atividade_principal[0].text}; {conta.atividades_secundarias[0].code}; {conta.atividades_secundarias[0].text};" +
-                                $"{conta.natureza_juridica}; {conta.logradouro}; {conta.numero}; {conta.complemento}; {conta.cep};" +
-                                $"{conta.bairro}; {conta.municipio}; {conta.uf}; {conta.email}; {conta.telefone}; {conta.efr};" +
-                                $"{conta.data_situacao}; {conta.motivo_situacao}; {conta.situacao_especial}; {conta.data_situacao_especial}; {conta.capital_social};");
-                        }
-                    }
-                    ViewBag.Lista = null;
-                    return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", $"loteCNPJ{DateTime.Now}.csv");
-                }
-                else
-                {
-                    ViewBag.Lista = _listaLotes.Count >= 1 ? _listaLotes : null;
-                }
+                ViewBag.Lista = _listaLotes.Count >= 1 ? _listaLotes : null;
                 return View();
             }
             catch (Exception error)
             {
                 Console.WriteLine(error);
-                throw;
+                return View();
             }
         }
 
         [HttpPost]
-        public IActionResult ConsultaLote(Root model, string cnpj)
-        {
-            _listaLotes.Add(Utilidades.FormataCnpj(cnpj));
-            ViewBag.Lista = _listaLotes.Distinct();
-            ViewBag.Quantidade = _listaLotes.Distinct().Count();
+        public IActionResult ConsultaLote(CnpjDiasVw model)
+        {      
+            if (Utilidades.ValidaCnpj(model.Cnpj) is true)
+            {
+                _listaLotes.Add(model);
+                ViewBag.Lista = _listaLotes.Distinct();
+                ViewBag.Quantidade = _listaLotes.Distinct().Count();
+            }
             return View();
         }
 
@@ -145,6 +116,47 @@ namespace BuscaCnpj.Controllers
             dynamic resultado = await ContaServices.EndPointCnpj(cnpj);
             StringBuilder builder = _contaServices.ConstroiCSV(resultado);
             return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", $"{resultado.cnpj}.csv");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GeraLoteExcel()
+        {
+            int contador = 0;
+            var listaLotes = _listaLotes.Distinct();
+            var builder = new StringBuilder();
+            builder.AppendLine($"CNPJ ; STATUS ; ultima_atualizacao; Tipo;  Porte ;" +
+                " Nome ; Fantasia ; Abertura ;  Codigo atividade_principal ;  Texto atividade_principal;" +
+                " Codigo atividades_secundarias;  Texto atividades_secundarias;  natureza_juridica;" +
+                " logradouro; Numero;  Complemento;  Cep; Bairro;  Municipio;  UF; Email;" +
+                " Telefone;  EFR;  data_situacao;  motivo_situacao; situacao_especial;" +
+                " data_situacao_especial;  capital_social;");
+            try
+            {
+                foreach (var item in listaLotes)
+                {
+                    contador++;
+                    if (contador == 3 || contador == 6 || contador == 9 || contador == 12 || contador == 15) Thread.Sleep(1000);
+
+                    var conta = await ContaServices.EndPointCnpjDefasado(Utilidades.FormataCnpj(item.Cnpj), item.Dias);
+                    if (conta != null)
+                    {
+                        builder.AppendLine($"{conta.cnpj} ; {conta.status} ; {conta.ultima_atualizacao}; {conta.tipo} ; {conta.porte} ;" +
+                            $"{conta.nome}; {conta.fantasia} ; {conta.abertura} ; {conta.atividade_principal[0].code};" +
+                            $"{conta.atividade_principal[0].text}; {conta.atividades_secundarias[0].code}; {conta.atividades_secundarias[0].text};" +
+                            $"{conta.natureza_juridica}; {conta.logradouro}; {conta.numero}; {conta.complemento}; {conta.cep};" +
+                            $"{conta.bairro}; {conta.municipio}; {conta.uf}; {conta.email}; {conta.telefone}; {conta.efr};" +
+                            $"{conta.data_situacao}; {conta.motivo_situacao}; {conta.situacao_especial}; {conta.data_situacao_especial}; {conta.capital_social};");
+                    }
+                }
+                ViewBag.Lista = null;
+                return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", $"loteCNPJ{DateTime.Now}.csv");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Apenas os {(contador - 1)} foram inseridos, a API parou de responder!");
+                return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", $"loteCNPJ{DateTime.Now}.csv");
+            }
+
         }
     }
 }
