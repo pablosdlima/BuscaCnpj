@@ -1,5 +1,6 @@
 ﻿using BuscaCnpj.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,8 +10,8 @@ namespace BuscaCnpj.Business.Interfaces
     {
         Task<Root> BuscaContaPorCnpj(string cnpj);
         Task<Root> BuscaContaPorCnpjDefasado(string cnpj, int dias);
-        //Task<dynamic> BuscaRelatorioCnpj();
         StringBuilder ConstroiCSV(dynamic resultado);
+        Task<StringBuilder> ConstroiLoteCSV(IEnumerable<CnpjDiasVw> listaLotes);
         Root PopulaInfoRootPorObj(dynamic obj);
     }
 }

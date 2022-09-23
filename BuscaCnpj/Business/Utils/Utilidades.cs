@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace BuscaCnpj.Business.Utils
 {
@@ -72,6 +73,6 @@ namespace BuscaCnpj.Business.Utils
 
                 return false;
             }
-        }
+        }      
     }
 }

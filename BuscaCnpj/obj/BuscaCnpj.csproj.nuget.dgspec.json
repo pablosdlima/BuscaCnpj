@@ -44,7 +44,7 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
-            "Microsoft.AspNetCore.SignalR": {
+            "AspNetCoreHero.ToastNotification": {
               "target": "Package",
               "version": "[1.1.0, )"
             },
@@ -55,10 +55,6 @@
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[5.0.2, )"
-            },
-            "Microsoft.jQuery.Unobtrusive.Ajax": {
-              "target": "Package",
-              "version": "[3.2.6, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",

@@ -11,7 +11,7 @@
         </div>
         <div class="d-flex justify-content-around w-100">
             <input asp-for="Dias" type="number" min="1" value="1" id="idDias" name="dias" class="form-control rounded w-25 p-2" placeholder="1" aria-label="Search" aria-describedby="search-addon" required />
-            <input asp-for="Cnpj" type="search" id="idcnpj" class="form-control rounded w-50 p-2" placeholder="EX 00.000.000/0000-00" aria-label="Search" aria-describedby="search-addon" onchange="mask(this)" />
+            <input asp-for="Cnpj" type="search" id="idcnpj" class="form-control rounded w-50 p-2" placeholder="EX 00.000.000/0000-00" aria-label="Search" aria-describedby="search-addon" onchange="mask(this)"  required/>
             <input type="submit" class="btn btn-success p-2" value="Buscar Cnpj" />
         </div>
         <span asp-validation-for="Cnpj" class="text-danger w-100 p-2"></span>
@@ -23,7 +23,7 @@
 {
     <div class="d-flex w-25 justify-content-between">
         <a asp-action="DeletaLote" asp-controller="Home" class="btn btn-danger text-center ">Limpar Cnpjs</a>
-        <a asp-action="GeraLoteExcel" asp-controller="Home" class="btn btn-outline-success text-center ">Gerar Excel</a>
+        <a asp-action="GeraLoteExcel" asp-controller="Home" target="_blank" class="btn btn-outline-success text-center ">Gerar Excel</a>
     </div>
     <p class="text-right"><strong>Quantidade de Registros: @ViewBag.Quantidade</strong></p>
     <h4 class="text-center">Cnpjs a serem convertidos em Excel</h4>

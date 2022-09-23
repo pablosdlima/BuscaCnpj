@@ -1,3 +1,5 @@
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 using BuscaCnpj.Business.Interfaces;
 using BuscaCnpj.Business.Services;
 using Microsoft.AspNetCore.Builder;
@@ -20,9 +22,11 @@ namespace BuscaCnpj
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews();      
 
             services.AddScoped<IConta, ContaServices>();
+
+            services.AddNotyf(config => { config.DurationInSeconds = 5; config.IsDismissable = true; config.Position = NotyfPosition.TopLeft; }); //notificação.
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +48,8 @@ namespace BuscaCnpj
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseNotyf();
 
             app.UseEndpoints(endpoints =>
             {

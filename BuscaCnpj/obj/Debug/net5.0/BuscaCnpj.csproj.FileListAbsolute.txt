@@ -34,7 +34,6 @@ C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\bin\Debug\net5.0\System.Composition.
 C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\bin\Debug\net5.0\System.Composition.Runtime.dll
 C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\bin\Debug\net5.0\System.Composition.TypedParts.dll
 C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
-C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\bin\Debug\net5.0\System.Net.WebSockets.WebSocketProtocol.dll
 C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\bin\Debug\net5.0\cs\Microsoft.CodeAnalysis.resources.dll
 C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\bin\Debug\net5.0\de\Microsoft.CodeAnalysis.resources.dll
 C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\bin\Debug\net5.0\es\Microsoft.CodeAnalysis.resources.dll
@@ -242,3 +241,8 @@ D:\Aplicações\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\refint\BuscaCnpj.dll
 D:\Aplicações\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\BuscaCnpj.pdb
 D:\Aplicações\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\BuscaCnpj.genruntimeconfig.cache
 D:\Aplicações\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\ref\BuscaCnpj.dll
+C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\bin\Debug\net5.0\BuscaCnpj.StaticWebAssets.xml
+C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\bin\Debug\net5.0\AspNetCoreHero.ToastNotification.Views.dll
+C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\bin\Debug\net5.0\AspNetCoreHero.ToastNotification.dll
+C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\BuscaCnpj.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\lpablo\Desktop\BuscaCnpj\BuscaCnpj\obj\Debug\net5.0\staticwebassets\BuscaCnpj.StaticWebAssets.xml

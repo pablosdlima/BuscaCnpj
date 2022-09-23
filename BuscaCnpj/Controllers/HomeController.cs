@@ -1,4 +1,5 @@
-﻿using BuscaCnpj.Business.Interfaces;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using BuscaCnpj.Business.Interfaces;
 using BuscaCnpj.Business.Services;
 using BuscaCnpj.Business.Utils;
 using BuscaCnpj.Models;
@@ -17,10 +18,12 @@ namespace BuscaCnpj.Controllers
     {
         private readonly IConta _contaServices;
         private static readonly List<CnpjDiasVw> _listaLotes = new();
+        private readonly INotyfService _toastNotification;
 
-        public HomeController(IConta contaServices)
+        public HomeController(IConta contaServices, INotyfService toastNotification)
         {
             _contaServices = contaServices;
+            _toastNotification = toastNotification;
         }
 
         [HttpGet]
@@ -40,10 +43,14 @@ namespace BuscaCnpj.Controllers
                 cnpj = Utilidades.FormataCnpj(cnpj);
 
                 if (cnpj.Length >= 14 && cnpj.Length <= 14) ViewBag.Lista = await _contaServices.BuscaContaPorCnpj(cnpj);
+
+                _toastNotification.Success("CNPJ encontrado!");
+
                 return View();
             }
             catch (Exception)
             {
+                _toastNotification.Warning("CNPJ inexistente!");
                 return View();
             }
         }
@@ -55,24 +62,46 @@ namespace BuscaCnpj.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult ConsultaLote()
+        [HttpPost]
+        public async Task<IActionResult> ConsultaDefasagem(Root model, string cnpj, int dias)
         {
             try
             {
-                ViewBag.Lista = _listaLotes.Count >= 1 ? _listaLotes : null;
+                if (!ModelState.IsValid) return View();
+
+                ViewBag.Lista = null;
+                if (cnpj != null) cnpj = Utilidades.FormataCnpj(cnpj);
+
+                if (cnpj.Length >= 14 && cnpj.Length <= 14) ViewBag.Lista = await _contaServices.BuscaContaPorCnpjDefasado(cnpj, dias);
+                _toastNotification.Success("CNPJ encontrado!");
+
                 return View();
             }
-            catch (Exception error)
+            catch (Exception)
             {
-                Console.WriteLine(error);
+                _toastNotification.Warning("CNPJ inexistente!");
                 return View();
             }
         }
 
+        [HttpGet]
+        public IActionResult ConsultaLote(int? tipo)
+        {
+            try
+            {
+                if(tipo == 1) _toastNotification.Success("Arquivo gerado!");
+                ViewBag.Lista = _listaLotes.Count >= 1 ? _listaLotes : null;
+            }
+            catch (Exception)
+            {
+                _toastNotification.Warning($"A API parou de responder!");
+            }
+            return View();
+        }
+
         [HttpPost]
         public IActionResult ConsultaLote(CnpjDiasVw model)
-        {      
+        {
             if (Utilidades.ValidaCnpj(model.Cnpj) is true)
             {
                 _listaLotes.Add(model);
@@ -89,25 +118,6 @@ namespace BuscaCnpj.Controllers
             return RedirectToAction("ConsultaLote", new { lote = false });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ConsultaDefasagem(Root model, string cnpj, int dias)
-        {
-            try
-            {
-                if (!ModelState.IsValid) return View();
-
-                ViewBag.Lista = null;
-                if (cnpj != null) cnpj = Utilidades.FormataCnpj(cnpj);
-
-                if (cnpj.Length >= 14 && cnpj.Length <= 14) ViewBag.Lista = await _contaServices.BuscaContaPorCnpjDefasado(cnpj, dias);
-                return View();
-            }
-            catch (Exception)
-            {
-                return View();
-            }
-        }
-
         public async Task<ActionResult> GeraExcel(string cnpj)
         {
             if (cnpj == null) return View();
@@ -115,48 +125,26 @@ namespace BuscaCnpj.Controllers
 
             dynamic resultado = await ContaServices.EndPointCnpj(cnpj);
             StringBuilder builder = _contaServices.ConstroiCSV(resultado);
+
+            _toastNotification.Success("CNPJ encontrado!");
+
             return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", $"{resultado.cnpj}.csv");
         }
-
         [HttpGet]
         public async Task<ActionResult> GeraLoteExcel()
         {
-            int contador = 0;
-            var listaLotes = _listaLotes.Distinct();
             var builder = new StringBuilder();
-            builder.AppendLine($"CNPJ ; STATUS ; ultima_atualizacao; Tipo;  Porte ;" +
-                " Nome ; Fantasia ; Abertura ;  Codigo atividade_principal ;  Texto atividade_principal;" +
-                " Codigo atividades_secundarias;  Texto atividades_secundarias;  natureza_juridica;" +
-                " logradouro; Numero;  Complemento;  Cep; Bairro;  Municipio;  UF; Email;" +
-                " Telefone;  EFR;  data_situacao;  motivo_situacao; situacao_especial;" +
-                " data_situacao_especial;  capital_social;");
             try
             {
-                foreach (var item in listaLotes)
-                {
-                    contador++;
-                    if (contador == 3 || contador == 6 || contador == 9 || contador == 12 || contador == 15) Thread.Sleep(1000);
-
-                    var conta = await ContaServices.EndPointCnpjDefasado(Utilidades.FormataCnpj(item.Cnpj), item.Dias);
-                    if (conta != null)
-                    {
-                        builder.AppendLine($"{conta.cnpj} ; {conta.status} ; {conta.ultima_atualizacao}; {conta.tipo} ; {conta.porte} ;" +
-                            $"{conta.nome}; {conta.fantasia} ; {conta.abertura} ; {conta.atividade_principal[0].code};" +
-                            $"{conta.atividade_principal[0].text}; {conta.atividades_secundarias[0].code}; {conta.atividades_secundarias[0].text};" +
-                            $"{conta.natureza_juridica}; {conta.logradouro}; {conta.numero}; {conta.complemento}; {conta.cep};" +
-                            $"{conta.bairro}; {conta.municipio}; {conta.uf}; {conta.email}; {conta.telefone}; {conta.efr};" +
-                            $"{conta.data_situacao}; {conta.motivo_situacao}; {conta.situacao_especial}; {conta.data_situacao_especial}; {conta.capital_social};");
-                    }
-                }
+                builder = await _contaServices.ConstroiLoteCSV(_listaLotes.Distinct());
                 ViewBag.Lista = null;
                 return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", $"loteCNPJ{DateTime.Now}.csv");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Apenas os {(contador - 1)} foram inseridos, a API parou de responder!");
+                _toastNotification.Warning($"A API parou de responder!");
                 return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", $"loteCNPJ{DateTime.Now}.csv");
             }
-
         }
     }
 }
